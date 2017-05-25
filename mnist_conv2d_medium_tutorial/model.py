@@ -8,13 +8,54 @@ class Model(object):
         self._num_labels = num_labels
 
     def inference(self, images):
-        pass
+        with tf.variable_scope('conv1') as scope:
+            kernel = self._create_weights([5, 5, 1, 32])
+            conv = self._create_conv2d(images, kernel)
+            bias = self._create_bias([32])
+            preactivation = tf.nn.bias_add(conv, bias)
+            conv1 = tf.nn.relu(preactivation, name=scope.name)
+            self._activation_summary(conv1)
+
+        # pool 1
+        h_pool1 = self._create_max_pool_2x2(conv1)
+
+        with tf.variable_scope('conv2') as scope:
+            kernel = self._create_weights([5, 5, 32, 64])
+            conv = self._create_conv2d(h_pool1, kernel)
+            bias = self._create_bias([64])
+            preactivation = tf.nn.bias_add(conv, bias)
+            conv2 = tf.nn.relu(preactivation, name=scope.name)
+            self._activation_summary(conv2)
+
+        # pool 2
+        h_pool2 = self._create_max_pool_2x2(conv2)
+
+        with tf.variable_scope('local1') as scope:
+            reshape = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
+            W_fc1 = self._create_weights([7 * 7 * 64, 1024])
+            b_fc1 = self._create_bias([1024])
+            local1 = tf.nn.relu(tf.matmul(reshape, W_fc1) + b_fc1, name=scope.name)
+            self._activation_summary(local1)
+
+        with tf.variable_scope('local2_linear') as scope:
+            W_fc2 = self._create_weights([1024, self._num_labels])
+            b_fc2 = self._create_bias([self._num_labels])
+            local2 = tf.nn.bias_add(tf.matmul(local1, W_fc2), b_fc2, name=scope.name)
+            self._activation_summary(local2)
+        return local2
 
     def train(self, loss, global_step):
-        pass
+        tf.summary.scalar('learning_rate', self._learning_rate)
+        train_op = tf.train.AdamOptimizer(self._learning_rate).minimize(loss, global_step=global_step)
+        return train_op
 
     def loss(self, logits, labels):
-        pass
+        with tf.variable_scope('loss') as scope:
+            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
+            cost = tf.reduce_mean(cross_entropy, name=scope.name)
+            tf.summary.scalar('cost', cost)
+
+        return cost
 
     def accuracy(self, logits, y):
         with tf.variable_scope('accuracy') as scope:
