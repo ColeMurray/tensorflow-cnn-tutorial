@@ -7,7 +7,7 @@ class Model(object):
         self._learning_rate = learning_rate
         self._num_labels = num_labels
 
-    def inference(self, images):
+    def inference(self, images, keep_prob):
         with tf.variable_scope('conv1') as scope:
             kernel = self._create_weights([5, 5, 1, 32])
             conv = self._create_conv2d(images, kernel)
@@ -40,7 +40,8 @@ class Model(object):
         with tf.variable_scope('local2_linear') as scope:
             W_fc2 = self._create_weights([1024, self._num_labels])
             b_fc2 = self._create_bias([self._num_labels])
-            local2 = tf.nn.bias_add(tf.matmul(local1, W_fc2), b_fc2, name=scope.name)
+            local1_drop = tf.nn.dropout(local1, keep_prob)
+            local2 = tf.nn.bias_add(tf.matmul(local1_drop, W_fc2), b_fc2, name=scope.name)
             self._activation_summary(local2)
         return local2
 
