@@ -1,0 +1,9 @@
+__pycache__/
+.idea/*
+data/*
+checkpoints/*
+graphs/*
+
+!data/.gitkeep
+!checkpoints/.gitkeep
+!graphs/.gitkeep
