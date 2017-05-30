@@ -38,6 +38,7 @@ def load_test_data(data_path):
     """
     test_data = pd.read_csv(data_path, header=None)
     x_test = test_data.drop(0, axis=1)
+    x_test = np.array(x_test).astype(np.float32)
 
     y_test = np.array(test_data[0])
     y_test = (np.arange(10) == y_test[:, None]).astype(np.float32)
