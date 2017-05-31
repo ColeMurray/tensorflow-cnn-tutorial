@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 IMAGE_SIZE = 28
 
@@ -10,12 +9,11 @@ def load_train_data(data_path, validation_size=500):
     :return: 3D Tensor input of train and validation set with 2D Tensor of one hot encoded image labels
     """
     # Data format: 1 byte label, 28 * 28 input
-    train_data = pd.read_csv(data_path, header=None)
-    x_train = train_data.drop(0, axis=1)
-    x_train = np.array(x_train).astype(np.float32)
+    train_data = np.genfromtxt(data_path, delimiter=',', dtype=np.float32)
+    x_train = train_data[:, 1:]
 
     # Get label and one-hot encode
-    y_train = np.array(train_data[0])
+    y_train = train_data[:, 0]
     y_train = (np.arange(10) == y_train[:, None]).astype(np.float32)
 
     # get a validation set and remove it from the train set
@@ -36,11 +34,10 @@ def load_test_data(data_path):
     Load mnist test data
     :return: 3D Tensor input of train and validation set with 2D Tensor of one hot encoded image labels
     """
-    test_data = pd.read_csv(data_path, header=None)
-    x_test = test_data.drop(0, axis=1)
-    x_test = np.array(x_test).astype(np.float32)
+    test_data = np.genfromtxt(data_path, delimiter=',', dtype=np.float32)
+    x_test = test_data[:, 1:]
 
-    y_test = np.array(test_data[0])
+    y_test = np.array(test_data[:, 0])
     y_test = (np.arange(10) == y_test[:, None]).astype(np.float32)
 
     x_test = x_test.reshape(len(x_test), IMAGE_SIZE, IMAGE_SIZE, 1)
