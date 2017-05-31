@@ -1,0 +1,26 @@
+name: test-env
+channels:
+- conda-forge
+- defaults
+dependencies:
+- funcsigs=1.0.2=py27_0
+- mock=2.0.0=py27_0
+- pbr=3.0.1=py27_0
+- protobuf=3.3.0=py27_0
+- six=1.10.0=py27_1
+- tensorflow=1.0.0=py27_0
+- mkl=2017.0.1=0
+- numpy=1.12.1=py27_0
+- openssl=1.0.2l=0
+- pip=9.0.1=py27_1
+- python=2.7.13=0
+- readline=6.2=2
+- setuptools=27.2.0=py27_0
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- wheel=0.29.0=py27_0
+- zlib=1.2.8=3
+- pip:
+  - mnist-conv2d-medium-tutorial==0.0.0
+prefix: /Users/user/anaconda3/envs/test-env
+
