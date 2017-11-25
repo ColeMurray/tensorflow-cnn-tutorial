@@ -29,7 +29,7 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt-10000', 'path to checkpoint file')
+    tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt-10000-10000', 'path to checkpoint file')
     tf.app.flags.DEFINE_string('test_data', 'data/mnist_test.csv', 'path to test data')
 
     tf.app.run()
